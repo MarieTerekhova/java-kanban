@@ -1,32 +1,37 @@
 package tasks;
 
-import java.util.Objects;
-
 public class Task {
 
-    private final int id;
-    private String nameTask;
-    private String descriptionTask;
-    private TaskStatus taskStatus;
+    protected int id;
+    protected String nameTask;
+    protected String descriptionTask;
+    protected TaskStatus taskStatus;
 
-    private static int nextId = 1;
-
-    public Task (String nameTask, String descriptionTask) {
+    public Task(String nameTask, String descriptionTask) {
         this.nameTask = nameTask;
         this.descriptionTask = descriptionTask;
         this.taskStatus = TaskStatus.NEW;
-        this.id = nextId++;
     }
 
-    public Task (int id, String nameTask, String descriptionTask, TaskStatus taskStatus) {
+    public Task(String nameTask, String descriptionTask, TaskStatus taskStatus) {
+        this.nameTask = nameTask;
+        this.descriptionTask = descriptionTask;
+        this.taskStatus = taskStatus;
+    }
+
+    public Task(int id, String nameTask, String descriptionTask, TaskStatus taskStatus) {
         this.id = id;
         this.nameTask = nameTask;
         this.descriptionTask = descriptionTask;
-        this.taskStatus  = taskStatus;
+        this.taskStatus = taskStatus;
     }
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNameTask() {
@@ -55,7 +60,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "\nTask: { " +
+        return "Task: { " +
                 "id: " + id +
                 ", название: " + "'" + nameTask + "'"
                 + ", описание: " + "'" + descriptionTask + "'"
