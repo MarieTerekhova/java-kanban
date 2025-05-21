@@ -11,72 +11,58 @@ public class Main {
 
         TaskManager taskManager = new TaskManager();
 
-        System.out.println("=====Создаем задачу=====");
-        Task task_1 = new Task("Оплатить квартплату", "на сайте Дом.клик");
-        Task task_2 = new Task("Проверить счетчики", "записать показания счетчиков");
-        taskManager.createTask(task_1);
-        taskManager.createTask(task_2);
-        System.out.println(task_1);
-        System.out.println();
+        // Тестирование функционала
+        Task task1 = new Task("Оплатить квартплату", "на сайте Дом.клик", TaskStatus.NEW);
+        Task task2 = new Task("Проверить счетчики", "записать показания счетчиков", TaskStatus.IN_PROGRESS);
+        taskManager.createTask(task1);
+        taskManager.createTask(task2);
 
-        System.out.println("=====Создаем эпик=====");
-        Epic epic_1 = new Epic("Отпуск", "с 12 июня 2 недели");
-        Epic epic_2 = new Epic("Театральный лагерь", "сезон с 16 июня");
-        Epic epic_3 = new Epic("Организовать ДР", "сюрприз сестре");
-        taskManager.createEpic(epic_1);
-        taskManager.createEpic(epic_2);
-        taskManager.createEpic(epic_3);
-        System.out.println(epic_1);
-        System.out.println();
+        Epic epic1 = new Epic("Отпуск", "с 12 июня 2 недели");
+        Epic epic2 = new Epic("Театральный лагерь", "сезон с 16 июня");
+        Epic epic3 = new Epic("Организовать ДР", "сюрприз сестре");
+        taskManager.createEpic(epic1);
+        taskManager.createEpic(epic2);
+        taskManager.createEpic(epic3);
 
-        System.out.println("======Создаем подзадачу======");
-        Subtask subtask_1 = new Subtask("Алтай", "маршрут поездки", 3);
-        Subtask subtask_2 = new Subtask("Справка", "офрмить доки по форме", 4);
-        Subtask subtask_3 = new Subtask("Список вещей", "накидать список, что с собой", 3);
-        Subtask subtask_4 = new Subtask("Кто будет?", "составить список приглашенных", 5);
-        Subtask subtask_5 = new Subtask("Ресторан", "выбрать рестик и заказать осн.блюда", 5);
-        taskManager.createSubtask(subtask_1);
-        taskManager.createSubtask(subtask_2);
-        taskManager.createSubtask(subtask_3);
-        taskManager.createSubtask(subtask_4);
-        taskManager.createSubtask(subtask_5);
-        System.out.println(subtask_3);
-        System.out.println();
+        Subtask subtask1 = new Subtask("Алтай", "маршрут поездки", TaskStatus.NEW, 3);
+        Subtask subtask2 = new Subtask("Справка", "офрмить доки по форме", TaskStatus.NEW, 4);
+        Subtask subtask3 = new Subtask("Список вещей", "накидать список, что с собой", TaskStatus.NEW, 3);
+        Subtask subtask4 = new Subtask("Кто будет?", "составить список приглашенных", TaskStatus.NEW, 5);
+        Subtask subtask5 = new Subtask("Ресторан", "выбрать рестик и заказать осн.блюда", TaskStatus.NEW, 5);
+        taskManager.createSubtask(subtask1);
+        taskManager.createSubtask(subtask2);
+        taskManager.createSubtask(subtask3);
+        taskManager.createSubtask(subtask4);
+        taskManager.createSubtask(subtask5);
 
-        System.out.println("======Получить таску по id======");
-        System.out.println(taskManager.getTaskById(1));
-        System.out.println(taskManager.getEpicById(3));
-        System.out.println();
+        System.out.println("Все задачи:");
+        printAllTasks(taskManager);
 
-        System.out.println("======Список подзадач в листе======");
-        System.out.println(taskManager.getArrayListSubtask());
-        System.out.println();
+        // Обновление статусов
+        taskManager.updateTask(new Task(task1.getId(), "Ремонт", "Купить коробки, скотч, упаков.пленку", TaskStatus.IN_PROGRESS));
+        taskManager.updateSubtask(new Subtask(subtask1.getId(), "Поездка в Алтай", subtask1.getDescriptionTask(), TaskStatus.IN_PROGRESS, epic1.getId()));
+        taskManager.updateSubtask(new Subtask(subtask2.getId(), subtask2.getNameTask(), "записаться в поликл.на прием", TaskStatus.DONE, epic2.getId()));
 
-        System.out.println("======Список задач эпиков======");
-        System.out.println(taskManager.getEpicHashMap());
-        System.out.println();
+        System.out.println("\nПосле обновления статусов:");
+        printAllTasks(taskManager);
 
-        System.out.println("=====Обновляем таску=====");
-        taskManager.updateTaskStatus(2, TaskStatus.IN_PROGRESS);
-        System.out.println(taskManager.getTaskById(2));
-        taskManager.updateSubtaskStatus(6, TaskStatus.IN_PROGRESS);
-        taskManager.updateTaskStatus(8, TaskStatus.DONE);
-        System.out.println(taskManager.getEpicById(3)); //проверяем статус эпика
-        System.out.println();
+        // Тестирование удаления
+        taskManager.deleteSubtask(subtask1.getId());
+        System.out.println("\nПосле удаления подзадачи:");
+        printAllTasks(taskManager);
 
-        Task taskUpdate = new Task(task_1.getId(), "Оплатить аренду", task_1.getDescriptionTask(), TaskStatus.IN_PROGRESS);
-        taskManager.updateTask(taskUpdate); //меняем название таски
-        System.out.println(taskManager.getTasksHashMap());
-        System.out.println();
+        System.out.println("\nПодзадачи эпика:");
+        System.out.println(taskManager.getEpicSubtasks(epic1.getId()));
+    }
 
-        System.out.println("======Удаляем таску=====");
-        taskManager.deleteTask(task_1.getId());
-        System.out.println(taskManager.getTasksHashMap());
-        System.out.println();
+    private static void printAllTasks(TaskManager manager) {
+        System.out.println("Обычные задачи:");
+        manager.getAllTasks().forEach(System.out::println);
 
-        System.out.println("======Удаляем весь список эпиков======");
-        taskManager.deleteAllEpic();
-        System.out.println(taskManager.getEpicHashMap());
-        System.out.println(taskManager.getArrayListSubtask());
+        System.out.println("\nЭпики:");
+        manager.getAllEpic().forEach(System.out::println);
+
+        System.out.println("\nПодзадачи:");
+        manager.getAllSubtask().forEach(System.out::println);
     }
 }
