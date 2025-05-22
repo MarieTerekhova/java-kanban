@@ -1,5 +1,6 @@
-package master;
-
+import manager.InMemoryTaskManager;
+import manager.Managers;
+import manager.TaskManager;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
@@ -9,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        TaskManager taskManager = new TaskManager();
+        TaskManager taskManager = Managers.getDefault();
 
         // Тестирование функционала
         Task task1 = new Task("Оплатить квартплату", "на сайте Дом.клик", TaskStatus.NEW);
@@ -46,6 +47,13 @@ public class Main {
         System.out.println("\nПосле обновления статусов:");
         printAllTasks(taskManager);
 
+        // Вызов истории
+        taskManager.getTaskById(task1.getId());
+        taskManager.getEpicById(epic3.getId());
+        taskManager.getSubtaskById(subtask2.getId());
+        taskManager.getSubtaskById(subtask4.getId());
+        printHistory((InMemoryTaskManager) taskManager); // история
+
         // Тестирование удаления
         taskManager.deleteSubtask(subtask1.getId());
         System.out.println("\nПосле удаления подзадачи:");
@@ -64,5 +72,12 @@ public class Main {
 
         System.out.println("\nПодзадачи:");
         manager.getAllSubtask().forEach(System.out::println);
+    }
+
+    private static void printHistory (InMemoryTaskManager taskManager){
+        System.out.println("\nИстория просмотров:");
+        for (Task task : taskManager.getHistory()) {
+            System.out.println(task);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package tasks;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Epic extends Task {
 
@@ -12,8 +13,7 @@ public class Epic extends Task {
     }
 
     public ArrayList<Integer> getSubtasksList() {
-        //return new ArrayList<>(); -- перестал работать метод проверки статуса Эпика
-        return subtasksList;
+        return new ArrayList<>(subtasksList);
     }
 
     public void addSubtask(int subtaskId) {
@@ -33,6 +33,19 @@ public class Epic extends Task {
     }
 
     @Override
+    public boolean equals(Object object) {
+        if (object == null || getClass() != object.getClass()) return false;
+        if (!super.equals(object)) return false;
+        Epic epic = (Epic) object;
+        return Objects.equals(getSubtasksList(), epic.getSubtasksList());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getSubtasksList());
+    }
+
+    @Override
     public String toString() {
         return "Epic: {" +
                 "id: " + getId() + ", название: " + "'" + getNameTask() + "'"
@@ -40,4 +53,6 @@ public class Epic extends Task {
                 + ", статус: " + "'" + getTaskStatus() + "'"
                 + ", subtask: " + subtasksList + "}";
     }
+
+
 }
