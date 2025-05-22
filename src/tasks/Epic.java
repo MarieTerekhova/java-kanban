@@ -12,8 +12,7 @@ public class Epic extends Task {
     }
 
     public ArrayList<Integer> getSubtasksList() {
-        //return new ArrayList<>(); -- перестал работать метод проверки статуса Эпика
-        return subtasksList;
+        return new ArrayList<>(subtasksList);
     }
 
     public void addSubtask(int subtaskId) {
