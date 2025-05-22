@@ -15,7 +15,7 @@ public class TaskManager {
 
     private int nextId = 1;
 
-    public int generatorNextId() {
+    private int generatorNextId() {
         return nextId++;
     }
 
@@ -109,31 +109,42 @@ public class TaskManager {
     }
 
     public boolean updateTask(Task task) {
+        boolean isExistenceOfTask;
         if (taskHashMap.containsKey(task.getId())) {
             taskHashMap.put(task.getId(), task);
+            isExistenceOfTask = true;
+        } else {
+            isExistenceOfTask = false;
         }
-        return true;
+        return isExistenceOfTask;
     }
 
     public boolean updateEpic(Epic epic) {
+        boolean isExistenceOfTask;
         Epic epicUpdate = epicHashMap.get(epic.getId());
         if (epicUpdate != null) {
             epicUpdate.setNameTask(epic.getNameTask());
             epicUpdate.setDescriptionTask(epic.getDescriptionTask());
-            updateEpicStatus(epicUpdate.getId());
+            isExistenceOfTask = true;
+        } else {
+            isExistenceOfTask= false;
         }
-        return true;
+        return isExistenceOfTask;
     }
 
     public boolean updateSubtask(Subtask subtask) {
+        boolean isExistenceOfTask;
         Subtask savedSubtask = subtasksHashMap.get(subtask.getId());
         if (savedSubtask != null) {
             savedSubtask.setNameTask(subtask.getNameTask());
             savedSubtask.setDescriptionTask(subtask.getDescriptionTask());
             savedSubtask.setTaskStatus(subtask.getTaskStatus());
             updateEpicStatus(savedSubtask.getEpicId());
+            isExistenceOfTask = true;
+        } else {
+            isExistenceOfTask = false;
         }
-        return true;
+        return isExistenceOfTask;
     }
 
     public void deleteTask(int id) {
