@@ -14,7 +14,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void addTaskinHistory(Task task) {
-        if (viewsHistory.size() > 11) { // если в списке больше 10 задач, то удаляем первую
+        if (viewsHistory.size() >= 10) { // если в списке больше 10 задач, то удаляем первую
             viewsHistory.removeFirst();
         }
         viewsHistory.add(task);

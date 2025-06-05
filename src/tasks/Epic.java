@@ -1,11 +1,12 @@
 package tasks;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Epic extends Task {
 
-    private ArrayList<Integer> subtasksList;
+    private List<Integer> subtasksList;
 
     public Epic(String nameTask, String descriptionTask) {
         super(nameTask, descriptionTask);
