@@ -52,6 +52,11 @@ public class Main {
         taskManager.getEpicById(epic3.getId());
         taskManager.getSubtaskById(subtask2.getId());
         taskManager.getSubtaskById(subtask4.getId());
+        taskManager.getSubtaskById(subtask1.getId());
+        taskManager.getTaskById(task1.getId());
+        taskManager.getSubtaskById(subtask2.getId());
+        taskManager.getSubtaskById(subtask1.getId());
+        taskManager.getTaskById(task1.getId());
         printHistory((InMemoryTaskManager) taskManager); // история
 
         // Тестирование удаления
@@ -74,7 +79,7 @@ public class Main {
         manager.getAllSubtask().forEach(System.out::println);
     }
 
-    private static void printHistory (InMemoryTaskManager taskManager){
+    private static void printHistory(InMemoryTaskManager taskManager) {
         System.out.println("\nИстория просмотров:");
         for (Task task : taskManager.getHistory()) {
             System.out.println(task);

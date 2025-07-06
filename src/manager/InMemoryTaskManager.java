@@ -19,6 +19,7 @@ public class InMemoryTaskManager implements TaskManager {
     private Map<Integer, Subtask> subtasksHashMap = new HashMap<>();
 
     private int nextId = 1;
+
     private int generatorNextId() {
         return nextId++;
     }
@@ -35,22 +36,28 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTaskById(int id) {
         Task task = taskHashMap.get(id);
-        addTaskinHistory(task);
-        return taskHashMap.get(id);
+        if (task != null) {
+            addTaskinHistory(task);
+        }
+        return task;
     }
 
     @Override
     public Epic getEpicById(int id) {
-        Task task = epicHashMap.get(id);
-        addTaskinHistory(task);
-        return epicHashMap.get(id);
+        Epic epic = epicHashMap.get(id);
+        if (epic != null) {
+            addTaskinHistory(epic);
+        }
+        return epic;
     }
 
     @Override
     public Subtask getSubtaskById(int id) {
-        Task task = subtasksHashMap.get(id);
-        addTaskinHistory(task);
-        return subtasksHashMap.get(id);
+        Subtask subtask = subtasksHashMap.get(id);
+        if (subtask != null) {
+            addTaskinHistory(subtask);
+        }
+        return subtask;
     }
 
     @Override
@@ -164,10 +171,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean updateSubtask(Subtask subtask) {
-        boolean isExistenceOfTask = true;
+    public void updateSubtask(Subtask subtask) {
         if (subtask.getId() == subtask.getEpicId()) {
-               throw new IllegalArgumentException("Подзадача не может быть своим эпиком");
+            throw new IllegalArgumentException("Подзадача не может быть своим эпиком");
         } else {
             Subtask savedSubtask = subtasksHashMap.get(subtask.getId());
             if (savedSubtask != null) {
@@ -177,12 +183,13 @@ public class InMemoryTaskManager implements TaskManager {
                 updateEpicStatus(savedSubtask.getEpicId());
             }
         }
-        return isExistenceOfTask;
     }
 
     @Override
-    public void deleteTask(int id) {
-        taskHashMap.remove(id);
+    public Task deleteTask(int id) {
+        Task task = taskHashMap.remove(id);
+        historyManager.remove(task);
+        return task;
     }
 
     @Override
@@ -219,7 +226,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteAllSubasks() {
+    public void deleteAllSubtasks() {
         subtasksHashMap.clear();
         for (Epic epic : epicHashMap.values()) {
             epic.clearSubtasks();
