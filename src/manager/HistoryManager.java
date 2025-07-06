@@ -1,6 +1,4 @@
 package manager;
-
-import org.w3c.dom.Node;
 import tasks.Task;
 
 import java.util.List;
