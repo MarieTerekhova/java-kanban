@@ -102,7 +102,7 @@ public class InMemoryHistoryManagerTest {
 
     @Test
     void shouldNotContainDuplicates() {
-        // Добавляем task1 несколько раз
+        // Добавляем tasteTask_1 несколько раз
         historyManager.addTaskinHistory(testTask_1);
         historyManager.addTaskinHistory(testTask_1);
         historyManager.addTaskinHistory(testTask_1);

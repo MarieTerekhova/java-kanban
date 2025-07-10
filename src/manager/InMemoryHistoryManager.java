@@ -25,29 +25,42 @@ public class InMemoryHistoryManager implements HistoryManager {
             viewsHistory.add(current.taskValeu);
             current = current.next;
         }
-        return new ArrayList<>(viewsHistory);
+        return viewsHistory;
     }
 
     @Override
     public void remove(Task task) {
         removeNode(task.getId());
+
     }
 
-    public void removeNode(int taskId) {
+    private void removeNode(int taskId) {
         Node nodeForRemove = nodes.get(taskId);
-
         if (nodeForRemove == null) {
             return;
+        }
+
+        // Обновляем ссылки соседних узлов
+        if (nodeForRemove.prev != null) {
+            nodeForRemove.prev.next = nodeForRemove.next;
         } else {
-            if (nodeForRemove == first) {
-                first = first.next;
-            } else if (nodeForRemove == last) {
-                last = last.prev;
-            } else {
-                nodeForRemove.prev.next = nodeForRemove.next;
-                nodeForRemove.next.prev = nodeForRemove.prev;
+            first = nodeForRemove.next;
+            if (first != null) {
+                first.prev = null;  // Обнуляем prev у нового первого элемента
             }
         }
+
+        if (nodeForRemove.next != null) {
+            nodeForRemove.next.prev = nodeForRemove.prev;
+        } else {
+            last = nodeForRemove.prev;
+            if (last != null) {
+                last.next = null;  // Обнуляем next у нового последнего элемента
+            }
+        }
+        nodeForRemove.prev = null;
+        nodeForRemove.next = null;
+        nodes.remove(taskId);
     }
 
     private Node linkLast(Task task) {
@@ -61,7 +74,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     private static class Node {
-        private Task taskValeu;
+        private final Task taskValeu;
         private Node next;
         private Node prev;
 
