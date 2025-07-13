@@ -147,17 +147,69 @@ public class InMemoryTaskManagerTest {
         int taskId = testTask.getId();
         taskManager.createEpic(testEpic);
         int epicId = testEpic.getId();
+        testSubtask.setEpicId(testEpic.getId());
         taskManager.createSubtask(testSubtask);
         int subtaskId = testSubtask.getId();
 
-        taskManager.deleteTask(taskId);
+        // Проверяем, что объекты созданы
+        assertNotNull(taskManager.getTaskById(taskId));
+        assertNotNull(taskManager.getEpicById(epicId));
+        assertNotNull(taskManager.getSubtaskById(subtaskId));
+
+        // 1. Тестируем удаление задачи
+        Task removedTask = taskManager.deleteTask(taskId);
+        assertNotNull(removedTask);
+        assertEquals(taskId, removedTask.getId());
         assertNull(taskManager.getTaskById(taskId));
 
+        // 2. Тестируем удаление подзадачи
         taskManager.deleteSubtask(subtaskId);
         assertNull(taskManager.getSubtaskById(subtaskId));
+        assertEquals(0, taskManager.getEpicSubtasks(epicId).size());
 
+        // 3. Тестируем удаление эпика (должны удалиться и его подзадачи)
         taskManager.deleteEpic(epicId);
         assertNull(taskManager.getEpicById(epicId));
+        assertNull(taskManager.getSubtaskById(subtaskId));
+
+        // 4. Тестируем массовое удаление
+        taskManager.createTask(new Task("Task 1", "Desc"));
+        taskManager.createTask(new Task("Task 2", "Desc"));
+        taskManager.createEpic(new Epic("Epic 1", "Desc"));
+
+        assertEquals(2, taskManager.getAllTasks().size());
+        assertEquals(1, taskManager.getAllEpic().size());
+
+        taskManager.deleteAllTasks();
+        assertEquals(0, taskManager.getAllTasks().size());
+        assertEquals(1, taskManager.getAllEpic().size()); // Эпики не должны удалиться
+
+        taskManager.deleteAllEpic();
+        assertEquals(0, taskManager.getAllEpic().size());
+
+        // Проверяем, что подзадачи удалились вместе с эпиками
+        taskManager.createEpic(testEpic);
+        testSubtask.setEpicId(testEpic.getId());
+        taskManager.createSubtask(testSubtask);
+        assertEquals(1, taskManager.getAllSubtask().size());
+        taskManager.deleteAllSubtasks();
+        assertEquals(0, taskManager.getAllSubtask().size());
+    }
+
+    @Test
+    void testDeleteShouldRemoveFromHistory() {
+        Task task = new Task("Task", "Desc");
+        taskManager.createTask(task);
+        int taskId = task.getId();
+
+        // Добавляем в историю просмотров
+        taskManager.getTaskById(taskId);
+
+        // Удаляем задачу
+        taskManager.deleteTask(taskId);
+
+        // Проверяем, что задача удалилась из истории
+        assertTrue(taskManager.getHistory().isEmpty());
     }
 
     @Test

@@ -34,9 +34,9 @@ public interface TaskManager {
 
     boolean updateEpic(Epic epic);
 
-    boolean updateSubtask(Subtask subtask);
+    void updateSubtask(Subtask subtask);
 
-    void deleteTask(int id);
+    Task deleteTask(int id);
 
     void deleteEpic(int id);
 
@@ -46,5 +46,5 @@ public interface TaskManager {
 
     void deleteAllEpic();
 
-    void deleteAllSubasks();
+    void deleteAllSubtasks();
 }
